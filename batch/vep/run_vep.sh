@@ -41,7 +41,7 @@ readonly species="${SPECIES:-homo_sapiens}"
 readonly assembly="${GENOME_ASSEMBLY:-GRCh38}"
 readonly fork_opt="--fork ${NUM_FORKS:-1}"
 readonly other_vep_opts="${OTHER_VEP_OPTS:---everything}"
-readonly annotation_field_name="${VCF_INFO_FILED:-CSQ_VT}"
+readonly annotation_field_name="${VCF_INFO_FILED:-CSQ}"
 
 if [[ ! -r "${VEP_CACHE:?VEP_CACHE is not set!}" ]]; then
   echo "ERRPR: Cannot read ${VEP_CACHE}"

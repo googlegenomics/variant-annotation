@@ -78,6 +78,7 @@ else
   echo "ERROR: Something went wrong when creating ${work_dir}/${output_cache} !"
 fi
 
-# TODO(bashir2): Experiment with the convert_cache.pl script of VEP and measure performance
-# improvements. If the change is significant then this script has to run convert_cache.pl too.
+# TODO(bashir2): Experiment with the convert_cache.pl script of VEP and measure
+# performance improvements. If the change is significant then this script has to
+# run convert_cache.pl too.
 
