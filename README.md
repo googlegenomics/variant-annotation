@@ -1,6 +1,23 @@
 ### Disclaimer
 
-This is not an official Verily product.
+This is a forked version of
+[verilylifesciences/variant-annotation](
+https://github.com/verilylifesciences/variant-annotation). The intention is to
+gradually update various pieces of this repo for variant annotation needs we
+have in [googlegenomics/gcp-variant-transforms](
+https://github.com/googlegenomics/gcp-variant-transforms) but at the same time
+provide annotation related tools/documentation that:
+  - can be used independently,
+  - are actively maintained with proper test harnesses.
+
+Any README file that has the following warning message indicates a sub-directory
+that has not been updated yet:
+
+**WARNING: Not actively maintained!**
+
+This is the list of modules that *are* actively maintained:
+* `batch/vep`
+
 
 variant-annotation
 ==================
