@@ -1,3 +1,5 @@
+**WARNING: Not actively maintained!**
+
 Curate Individual Annotation Sources
 ====================================
 

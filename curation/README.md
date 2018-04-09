@@ -1,3 +1,5 @@
+**WARNING: Not actively maintained!**
+
 Curation Scripts
 ================
 

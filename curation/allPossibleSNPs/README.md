@@ -1,3 +1,5 @@
+**WARNING: Not actively maintained!**
+
 Create an All-Possible SNPs Table
 =================================
 
