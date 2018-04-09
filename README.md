@@ -16,7 +16,7 @@ that has not been updated yet:
 **WARNING: Not actively maintained!**
 
 This is the list of modules that *are* actively maintained:
-* TODO add list of sub-directories.
+* `batch/vep`
 
 
 variant-annotation

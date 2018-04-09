@@ -10,12 +10,21 @@ annotated on the fly with new annotation resources as they become available.)
 
 This code uses
 Ensembl's
-[Variant Effect Prediction](http://www.ensembl.org/info/docs/tools/vep/index.html) (VEP)
+[Variant Effect Prediction](
+http://www.ensembl.org/info/docs/tools/vep/index.html) (VEP)
 from McLaren et. al. 2016
-([doi:10.1186/s13059-016-0974-4](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-0974-4))
-to annotate variants in a BigQuery table.
+([doi:10.1186/s13059-016-0974-4](
+https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-0974-4))
+to annotate variants either in VCF files or in a BigQuery table.
 
-It is horizontally scalable due to the use
+To annotate VCF files, check the [documentation](./vep/README.md) in `vep`
+directory on how to build docker images containing VEP, how to create VEP cache
+for those images, and how to run VEP.
+
+**WARNING: The build_annotator and run_annotator pieces below are not actively
+maintained in this repo yet!**
+
+Annotating variants in BigQuery talbes is horizontally scalable due to the use
 of [dsub](https://cloud.google.com/genomics/v1alpha2/dsub). A separate instance
 of VEP is run by dsub for each shard of each of the files passed on the command
 line.  VEP is also configured to run with as many threads as the number of cores
