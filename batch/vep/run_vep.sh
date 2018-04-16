@@ -40,7 +40,8 @@ fi
 readonly species="${SPECIES:-homo_sapiens}"
 readonly assembly="${GENOME_ASSEMBLY:-GRCh38}"
 readonly fork_opt="--fork ${NUM_FORKS:-1}"
-readonly other_vep_opts="${OTHER_VEP_OPTS:---everything}"
+readonly other_vep_opts="${OTHER_VEP_OPTS:---everything \
+  --check_ref --allow_non_variant}"
 readonly annotation_field_name="${VCF_INFO_FILED:-CSQ}"
 
 if [[ ! -r "${VEP_CACHE:?VEP_CACHE is not set!}" ]]; then
@@ -64,6 +65,7 @@ if [[ -e ${output_file} ]]; then
   echo "ERROR: ${output_file} already exist!"
   exit 1
 fi
+mkdir -p $(dirname ${output_file})
 touch ${output_file}
 rm ${output_file}
 
