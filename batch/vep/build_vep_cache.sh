@@ -47,19 +47,19 @@ readonly ftp_base="ftp://ftp.ensembl.org/pub/release-${release}"
 # Also the first letter of the file is capital while it is small for the actual
 # cache file (above). For example: "Homo_sapiens.GRCh38.dna.toplevel.fa.gz"
 readonly fasta_file="${species^?}.${assembly}.dna.toplevel.fa.gz"
-if [ $species == "homo_sapiens" ] && [ $assembly == "GRCh37" ]; then
-  if [ ! `command -v samtools` ]; then
+if [[ $species == "homo_sapiens" ]] && [[ $assembly == "GRCh37" ]]; then
+  if [[ ! `command -v samtools` ]]; then
     echo "ERROR: samtools is needed to create the .fai index."
-    echo -e "It can be installed by:\n"
-    echo -e "sudo apt-get install samtools\n"
+    echo -e "It can be installed by:"
+    echo -e "sudo apt-get install samtools"
     echo "Or it can be downloaded from:"
     echo "http://www.htslib.org/download/"
     exit 1
   fi
   if [ ! `command -v bgzip` ]; then
     echo "ERROR: bgzip is needed to create the .gzi index."
-    echo -e "It can be installed by:\n"
-    echo -e "sudo apt-get install tabix\n"
+    echo -e "It can be installed by:"
+    echo -e "sudo apt-get install tabix"
     exit 1
   fi
   readonly ftp_GRCh37="ftp://ftp.ensembl.org/pub/grch37/release-${release}"
