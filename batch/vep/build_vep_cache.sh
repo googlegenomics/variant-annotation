@@ -42,20 +42,48 @@ mkdir -p "${work_dir}"
 pushd "${work_dir}"
 readonly cache_file="${species}_vep_${release}_${assembly}.tar.gz"
 readonly ftp_base="ftp://ftp.ensembl.org/pub/release-${release}"
-readonly remote_cache="${ftp_base}/variation/VEP/${cache_file}"
-echo "Downloading ${remote_cache} ..."
-curl -O "${remote_cache}"
 
 # The fasta file name depends on the species and assembly but not the version.
 # Also the first letter of the file is capital while it is small for the actual
 # cache file (above). For example: "Homo_sapiens.GRCh38.dna.toplevel.fa.gz"
 readonly fasta_file="${species^?}.${assembly}.dna.toplevel.fa.gz"
-readonly remote_fasta="${ftp_base}/fasta/homo_sapiens/dna_index/${fasta_file}"
-echo "Downloading ${remote_fasta} and its index files ..."
-curl -O "${remote_fasta}"
-curl -O "${remote_fasta}.fai"
-curl -O "${remote_fasta}.gzi"
+if [[ $species == "homo_sapiens" ]] && [[ $assembly == "GRCh37" ]]; then
+  if [[ ! `command -v samtools` ]]; then
+    echo "ERROR: samtools is needed to create the .fai index."
+    echo "It can be installed by:"
+    echo "sudo apt-get install samtools"
+    echo "Or it can be downloaded from:"
+    echo "http://www.htslib.org/download/"
+    exit 1
+  fi
+  if [ ! `command -v bgzip` ]; then
+    echo "ERROR: bgzip is needed to create the .gzi index."
+    echo "It can be installed by:"
+    echo "sudo apt-get install tabix"
+    exit 1
+  fi
+  readonly ftp_GRCh37="ftp://ftp.ensembl.org/pub/grch37/release-${release}"
+  readonly remote_fasta="${ftp_GRCh37}/fasta/homo_sapiens/dna/${fasta_file}"
+  echo "Downloading ${remote_fasta}"
+  curl -O "${remote_fasta}"
+  echo "Decompressing fasta file..."
+  gzip -d "${fasta_file}"
+  echo "Block compressing fasta file and creating .gzi index..."
+  readonly num_cores=`nproc --all`
+  bgzip --index --threads "$num_cores" "${fasta_file%.*}"
+  echo "Creating .fai index..."
+  samtools faidx "${fasta_file}"
+else
+  readonly remote_fasta="${ftp_base}/fasta/homo_sapiens/dna_index/${fasta_file}"
+  echo "Downloading ${remote_fasta} and its index files ..."
+  curl -O "${remote_fasta}"
+  curl -O "${remote_fasta}.fai"
+  curl -O "${remote_fasta}.gzi"
+fi
 
+readonly remote_cache="${ftp_base}/variation/VEP/${cache_file}"
+echo "Downloading ${remote_cache} ..."
+curl -O "${remote_cache}"
 echo "Decompressing cache files ..."
 tar xzf "${cache_file}"
 
@@ -81,4 +109,3 @@ fi
 # TODO(bashir2): Experiment with the convert_cache.pl script of VEP and measure
 # performance improvements. If the change is significant then this script has to
 # run convert_cache.pl too.
-
