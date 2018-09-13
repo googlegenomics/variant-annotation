@@ -1,0 +1,13 @@
+runtime: custom
+env: flex
+resources:
+  memory_gb: 4
+  disk_size_gb: 30
+automatic_scaling:
+  min_num_instances: 500
+  max_num_instances: 500
+  cool_down_period_sec: 180
+  cpu_utilization:
+    target_utilization: 0.95
+readiness_check:
+  app_start_timeout_sec: 2400
