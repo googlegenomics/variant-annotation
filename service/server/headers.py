@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Names of VEP annotation fields and their corresponding descriptions.
+"""Names of annotation fields and their corresponding types and descriptions.
 
 Original descriptions are part of the VEP documentation and can be found at:
 http://useast.ensembl.org/info/docs/tools/vep/vep_formats.html#output
@@ -243,86 +243,6 @@ VEP_TYPES = {
     'gnomAD_OTH_AF': 'float',
     'gnomAD_SAS_AF': 'float',
     'miRNA': 'string'}
-
-
-# # NOTE: Order of these names is important.
-# VEP_NAMES = [
-#  'Location',
-#  'Allele',
-#  'Gene',
-#  'Feature',
-#  'Feature_type',
-#  'Consequence',
-#  'cDNA_position',
-#  'CDS_position',
-#  'Protein_position',
-#  'Amino_acids',
-#  'Codons',
-#  'Existing_variation',
-#  'IMPACT',
-#  'DISTANCE',
-#  'STRAND',
-#  'FLAGS',
-#  'VARIANT_CLASS',
-#  'SYMBOL',
-#  'SYMBOL_SOURCE',
-#  'HGNC_ID',
-#  'BIOTYPE',
-#  'CANONICAL',
-#  'TSL',
-#  'APPRIS',
-#  'CCDS',
-#  'ENSP',
-#  'SWISSPROT',
-#  'TREMBL',
-#  'UNIPARC',
-#  'GENE_PHENO',
-#  'SIFT',
-#  'PolyPhen',
-#  'EXON',
-#  'INTRON',
-#  'DOMAINS',
-#  'miRNA',
-#  'HGVSc',
-#  'HGVSp',
-#  'HGVS_OFFSET',
-#  'AF',
-#  'AFR_AF',
-#  'AMR_AF',
-#  'EAS_AF',
-#  'EUR_AF',
-#  'SAS_AF',
-#  'AA_AF',
-#  'EA_AF',
-#  'gnomAD_AF',
-#  'gnomAD_AFR_AF',
-#  'gnomAD_AMR_AF',
-#  'gnomAD_ASJ_AF',
-#  'gnomAD_EAS_AF',
-#  'gnomAD_FIN_AF',
-#  'gnomAD_NFE_AF',
-#  'gnomAD_OTH_AF',
-#  'gnomAD_SAS_AF',
-#  'MAX_AF',
-#  'MAX_AF_POPS',
-#  'CLIN_SIG',
-#  'SOMATIC',
-#  'PHENO',
-#  'PUBMED',
-#  'MOTIF_NAME',
-#  'MOTIF_POS',
-#  'HIGH_INF_POS',
-#  'MOTIF_SCORE_CHANGE']
-#
-# VEP_HEADERS = []
-# for name in VEP_NAMES:
-#     header = {'name':name,
-#               'type':VEP_TYPES[name],
-#               'desc':VEP_DESCRIPTIONS[name]}
-#     VEP_HEADERS.append(header)
-
-# TODO (jessime) Header name order should not be hard-coded,
-# as it will depend on VEP's settings
 
 VEP_HEADERS = {}
 for name in VEP_TYPES:

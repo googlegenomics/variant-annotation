@@ -1,3 +1,27 @@
+# Copyright 2018 Google Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""A small end-to-end client that uses apache_beam, but not Variant Transforms.
+
+This prototype client accepts a path to a VCF file, the path to the newly
+annotated VCF file, and either `p` or `d` to specify the `production` or
+`development` environment.
+
+Run by:
+    python example_client.py path/to/infile.vcf, path/to/outfile.vcf, [p|d]
+"""
+
 import sys
 import uuid
 import requests

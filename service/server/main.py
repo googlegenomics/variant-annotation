@@ -12,6 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Server listening for variants and responding with annotations.
+
+Run locally:
+    python main.py
+
+Run on App Engine:
+    gcloud app deploy --project gcp-variant-transforms-test
+"""
+
 import os
 import logging
 
@@ -35,6 +44,7 @@ def setup_vep_cache():
     vep_file = 'vep_cache_homo_sapiens_GRCh38_91.tar.gz'
     gcs_vep_file = os.path.join(gcs_dir, vep_file)
     local_vep_file = os.path.join(local_cache, vep_file)
+    # TODO(jessime) Handle failures on the lines below.
     check_call('gsutil cp {} {}'.format(gcs_vep_file, local_cache).split())
     check_call('tar xzvf {} -C {}'.format(local_vep_file, local_cache).split())
     # TODO(jessime) Here and elsewhere, replace prints with proper logging
@@ -99,10 +109,20 @@ def vep_tab_to_json(response):
     """Updates response dict to contain annotations grouped by their variants
 
     Args:
-        response: Dict containing JSON response to send to client
+        response: Dict containing JSON response to send to client.
+            Example input of response['stdout']:
+                'rs1\tX:2\tT\tENSG3\nrs1\tX:2\tT\tENSG6\nrs2\tX:3\tA\tENSG3\n'
+            Example output of response['stdout']:
+                [{'variant_id': 'rs1',
+                  'data': [['X:2', 'T', 'ENSG3'],
+                           ['X:2', 'T', 'ENSG6']]},
+                 {'variant_id': 'rs2',
+                  'data': [['X:3', 'A', 'ENSG3']]}]
     """
     # TODO(jessime) This function should return something instead of mutating
     # response.
+    # TODO(jessime) Change `repsonse` to something more descriptive. And save
+    # response for the final variable that is returned to the client.
     new_stdout_response = []
     current_variant = None
     header_names, variant_lines = extract_headers_and_annotations(
