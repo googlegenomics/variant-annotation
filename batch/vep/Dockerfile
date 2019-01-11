@@ -58,4 +58,6 @@ RUN perl INSTALL.pl \
 
 ADD run_vep.sh ${VEP_BASE}/run_vep.sh
 
+ADD run_script_with_watchdog.sh ${VEP_BASE}/run_script_with_watchdog.sh
+
 ENTRYPOINT []
