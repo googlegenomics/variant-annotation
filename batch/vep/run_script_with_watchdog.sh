@@ -24,36 +24,42 @@ set -euo pipefail
 
 #################################################
 # Returns the generation number of a GCS file. In case of failure, it sleeps and
-# retries for at most 4 times.
+# retries for at most 3 times.
 # Arguments:
 #   $1: The GCS file.
 #################################################
 function get_last_update_time {
-  next_wait_time=0
-  until last_update_time_in_microseconds=`gsutil stat ${1} | awk '$1 == "Generation:" {print $2}'` || [ ${next_wait_time} -eq 4 ]; do
-    sleep $(( next_wait_time++ ))
+  num_retries=0
+  until last_update_time_in_microseconds="$(gsutil stat $1 | awk '$1 == "Generation:" {print $2}')" || [ ${num_retries} -eq 4 ]; do
+    ((num_retries++))
+    time_to_sleep_sec="$((num_retries*1))"
+    sleep "${time_to_sleep_sec}"
   done
-  echo ${last_update_time_in_microseconds}
+  echo "${last_update_time_in_microseconds}"
 }
 
 function main {
-  script_to_run=${1}
-  watchdog_file_update_interval=${2}
-  watchdog_file=${3}
-  script_args=${@:4}
-  watchdog_file_stale_time="$((4*${watchdog_file_update_interval}))"
+  if [[ $# < 3 ]]; then
+    echo "Usage: $0 script_to_run watchdog_file_update_interval watchdog_file script_to_run_args"
+    exit 1
+  fi
+  script_to_run="$1"
+  watchdog_file_update_interval="$2"
+  watchdog_file="$3"
+  script_to_run_args="${@:4}"
+  watchdog_file_allowed_stale_time="$((4*watchdog_file_update_interval))"
 
-  ${script_to_run} ${script_args} &
+  ${script_to_run} ${script_to_run_args} &
 
   background_pid="$!"
-  while ps -p ${background_pid} > /dev/null
+  while ps -p "${background_pid}" > /dev/null
   do
-    start="$(($(get_last_update_time ${watchdog_file})/1000000))"
-    declare -i end
-    end=`date +%s`
-    diff="$((end-start))"
-    echo "The watchdog file is updated ${diff} seconds ago."
-    if ((${diff}>${watchdog_file_stale_time})); then
+    last_update_sec="$(($(get_last_update_time ${watchdog_file})/1000000))"
+    declare -i now_sec
+    now_sec="$(date +%s)"
+    last_update_age_sec="$((now_sec-last_update_sec))"
+    echo "The watchdog file is updated ${last_update_age_sec} seconds ago."
+    if (("${last_update_age_sec}">"${watchdog_file_allowed_stale_time}")); then
       echo "ERROR: The watchdog file is stale, and running of ${script_to_run} has been killed."
       kill "${background_pid}"
       exit 1
