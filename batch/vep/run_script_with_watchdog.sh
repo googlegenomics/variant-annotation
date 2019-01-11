@@ -40,7 +40,7 @@ function get_last_update_time {
 
 function main {
   if [[ $# < 3 ]]; then
-    echo "Usage: $0 script_to_run watchdog_file_update_interval watchdog_file script_to_run_args"
+    echo "Usage: $0 <script_to_run> <watchdog_file_update_interval> <watchdog_file> <script_to_run_args>"
     exit 1
   fi
   script_to_run="$1"
