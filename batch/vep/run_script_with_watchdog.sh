@@ -23,18 +23,13 @@
 set -euo pipefail
 
 #################################################
-# Returns the generation number of a GCS file. In case of failure, it sleeps and
-# retries for at most 3 times.
+# Returns the generation number of a GCS file. Use the wrapped gsutil in
+# gcr.io/cloud-genomics-pipelines/io with additional retry logic.
 # Arguments:
 #   $1: The GCS file.
 #################################################
 function get_last_update_time {
-  num_retries=0
-  until last_update_time_in_microseconds="$(gsutil stat $1 | awk '$1 == "Generation:" {print $2}')" || [ ${num_retries} -eq 4 ]; do
-    ((num_retries++))
-    time_to_sleep_sec="$((num_retries*1))"
-    sleep "${time_to_sleep_sec}"
-  done
+  last_update_time_in_microseconds="$(gsutil stat $1 | awk '$1 == "Generation:" {print $2}')"
   echo "${last_update_time_in_microseconds}"
 }
 
