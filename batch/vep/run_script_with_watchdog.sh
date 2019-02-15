@@ -23,14 +23,12 @@
 set -euo pipefail
 
 #################################################
-# Returns the generation number of a GCS file. Use the wrapped gsutil in
-# gcr.io/cloud-genomics-pipelines/io with additional retry logic.
+# Returns the generation number of a GCS file.
 # Arguments:
 #   $1: The GCS file.
 #################################################
 function get_last_update_time {
-  last_update_time_in_microseconds="$(gsutil stat $1 | awk '$1 == "Generation:" {print $2}')"
-  echo "${last_update_time_in_microseconds}"
+  gsutil stat $1 | awk '$1 == "Generation:" {print $2}'
 }
 
 function main {
