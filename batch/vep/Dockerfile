@@ -23,9 +23,9 @@
 # downloaded separately and made available through command line arguments.
 # The script for doing so is build_vep_cache.sh, see README.md for details.
 
-# Start from this container so that gcloud and all its dependencies are already
-# available.
-FROM gcr.io/cloud-builders/gcloud
+# The pipelines-io container provides a wrapper around gsutil with additional
+# retry logic.
+FROM gcr.io/cloud-genomics-pipelines/io
 
 ARG ENSEMBL_RELEASE=91
 ARG VEP_BASE=/opt/variant_effect_predictor
