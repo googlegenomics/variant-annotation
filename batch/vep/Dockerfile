@@ -30,7 +30,7 @@ FROM gcr.io/cloud-genomics-pipelines/io
 ARG ENSEMBL_RELEASE=91
 ARG VEP_BASE=/opt/variant_effect_predictor
 
-RUN apt-get -y update && apt-get install -y \
+RUN apt-get -y update && apt-get install -y procps\
     build-essential \
     git \
     libarchive-zip-perl \
