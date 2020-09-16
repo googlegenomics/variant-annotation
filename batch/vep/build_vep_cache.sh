@@ -81,7 +81,11 @@ else
   curl -O "${remote_fasta}.gzi"
 fi
 
-readonly remote_cache="${ftp_base}/variation/VEP/${cache_file}"
+if (( release <= 95 )); then
+  readonly remote_cache="${ftp_base}/variation/VEP/${cache_file}"
+else
+  readonly remote_cache="${ftp_base}/variation/vep/${cache_file}"
+fi
 echo "Downloading ${remote_cache} ..."
 curl -O "${remote_cache}"
 echo "Decompressing cache files ..."
