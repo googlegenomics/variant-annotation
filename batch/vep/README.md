@@ -35,9 +35,9 @@ that source. By default, it uses version 101 of VEP. This can be changed by
 Let's say we want to push this image to the
 [Container Registry](https://cloud.google.com/container-registry/) of
 `my-project` on Google Cloud, so we can pick `[IMAGE_TAG]` as
-`gcr.io/my-project/vep_101`. Then push this image by:
+`gcr.io/my-project/vep:101`. Then push this image by:
 
-`gcloud docker -- push gcr.io/my-project/vep_101`
+`gcloud docker -- push gcr.io/my-project/vep:101`
 
 **TODO**: Add `cloudbuild.yaml` files for both easy push and integration test.
 
