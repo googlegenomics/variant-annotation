@@ -26,14 +26,14 @@
 # Capital letter variables refer to environment variables that can be set from
 # outside. Internal variables have small letters. All environment variables
 # have a default value as well to set up cache for homo_sapiens with reference
-# GRCh38 and release 91 of VEP.
+# GRCh38 and release 101 of VEP.
 #
 # More details on cache files can be found here:
 # https://ensembl.org/info/docs/tools/vep/script/vep_cache.html
 
 set -euo pipefail
 
-readonly release="${ENSEMBL_RELEASE:-91}"
+readonly release="${ENSEMBL_RELEASE:-101}"
 readonly species="${VEP_SPECIES:-homo_sapiens}"
 readonly assembly="${GENOME_ASSEMBLY:-GRCh38}"
 readonly work_dir="vep_cache"
@@ -81,7 +81,12 @@ else
   curl -O "${remote_fasta}.gzi"
 fi
 
-readonly remote_cache="${ftp_base}/variation/VEP/${cache_file}"
+# The path naming convention changed from "VEP" to "vep" after build 95.
+if (( release <= 95 )); then
+  readonly remote_cache="${ftp_base}/variation/VEP/${cache_file}"
+else
+  readonly remote_cache="${ftp_base}/variation/vep/${cache_file}"
+fi
 echo "Downloading ${remote_cache} ..."
 curl -O "${remote_cache}"
 echo "Decompressing cache files ..."

@@ -17,7 +17,7 @@
 #
 # Example:
 #
-# docker build . --build-arg ENSEMBL_RELEASE=91 --tag vep_91
+# docker build . --build-arg ENSEMBL_RELEASE=101 --tag vep_101
 #
 # To run vep through containers created by this file, the VEP cache has to be
 # downloaded separately and made available through command line arguments.
@@ -27,13 +27,15 @@
 # retry logic.
 FROM gcr.io/cloud-genomics-pipelines/io
 
-ARG ENSEMBL_RELEASE=91
+ARG ENSEMBL_RELEASE=101
 ARG VEP_BASE=/opt/variant_effect_predictor
 
 RUN apt-get -y update && apt-get install -y procps\
     build-essential \
     git \
     libarchive-zip-perl \
+    libbz2-dev \
+    liblzma-dev \
     libdbd-mysql-perl \
     libdbi-perl \
     libfile-copy-recursive-perl \
