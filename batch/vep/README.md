@@ -27,17 +27,17 @@ Inside this directory, run:
 
 This will download the source from
 [VEP GitHub repo](https://github.com/Ensembl/ensembl-vep) and build VEP from
-that source. By default, it uses version 101 of VEP. This can be changed by
+that source. By default, it uses version 104 of VEP. This can be changed by
 `ENSEMBL_RELEASE` build argument, e.g.,
 
-`docker build . -t [IMAGE_TAG] --build-arg ENSEMBL_RELEASE=90`
+`docker build . -t [IMAGE_TAG] --build-arg ENSEMBL_RELEASE=104`
 
 Let's say we want to push this image to the
 [Container Registry](https://cloud.google.com/container-registry/) of
 `my-project` on Google Cloud, so we can pick `[IMAGE_TAG]` as
-`gcr.io/my-project/vep:101`. Then push this image by:
+`gcr.io/my-project/vep:104`. Then push this image by:
 
-`gcloud docker -- push gcr.io/my-project/vep:101`
+`gcloud docker -- push gcr.io/my-project/vep:104`
 
 **TODO**: Add `cloudbuild.yaml` files for both easy push and integration test.
 
@@ -48,7 +48,7 @@ download and integrate different pieces of the VEP database or cache files.
 Then from within that directory run the
 [`build_vep_cache.sh`](build_vep_cache.sh) script. By default this script
 creates the database for human (homo_sapiens), referenec sequence `GRCh38`,
-and release 101 of VEP. These values can be overwritten by the following
+and release 104 of VEP. These values can be overwritten by the following
 environment variables (note you should use the same VEP release
 that you used for creating VEP docker image above):
 
@@ -74,7 +74,7 @@ gcloud alpha genomics pipelines run \
   --inputs VCF_INFO_FILED=CSQ_RERUN
 ```
 
-Note the `vep_cache_homo_sapiens_GRCh38_101.tar.gz` file that is referenced in
+Note the `vep_cache_homo_sapiens_GRCh38_104.tar.gz` file that is referenced in
 the sample `yaml` file, is the output file that you get from the above database
 creation step.
 
