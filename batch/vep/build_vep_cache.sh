@@ -26,16 +26,16 @@
 # Capital letter variables refer to environment variables that can be set from
 # outside. Internal variables have small letters. All environment variables
 # have a default value as well to set up cache for homo_sapiens with reference
-# GRCh38 and release 101 of VEP.
+# GRCh38 and release 104 of VEP.
 #
 # More details on cache files can be found here:
 # https://ensembl.org/info/docs/tools/vep/script/vep_cache.html
 
 set -euo pipefail
 
-readonly release="${ENSEMBL_RELEASE:-101}"
-readonly species="${VEP_SPECIES:-homo_sapiens}"
-readonly assembly="${GENOME_ASSEMBLY:-GRCh38}"
+readonly release="${ENSEMBL_RELEASE:-104}"
+readonly species="${VEP_SPECIES:-homo_sapiens}" # or "${VEP_SPECIES:-mus_musculus}"
+readonly assembly="${GENOME_ASSEMBLY:-GRCh38}" # or "${GENOME_ASSEMBLY:-GRCh37}" for homo_sapiens or "${GENOME_ASSEMBLY:-GRCm38}" for mus_musculus
 readonly work_dir="vep_cache"
 
 mkdir -p "${work_dir}"
@@ -63,7 +63,7 @@ if [[ $species == "homo_sapiens" ]] && [[ $assembly == "GRCh37" ]]; then
     exit 1
   fi
   readonly ftp_GRCh37="ftp://ftp.ensembl.org/pub/grch37/release-${release}"
-  readonly remote_fasta="${ftp_GRCh37}/fasta/homo_sapiens/dna/${fasta_file}"
+  readonly remote_fasta="${ftp_GRCh37}/fasta/${species}/dna/${fasta_file}"
   echo "Downloading ${remote_fasta}"
   curl -O "${remote_fasta}"
   echo "Decompressing fasta file..."
@@ -74,7 +74,7 @@ if [[ $species == "homo_sapiens" ]] && [[ $assembly == "GRCh37" ]]; then
   echo "Creating .fai index..."
   samtools faidx "${fasta_file}"
 else
-  readonly remote_fasta="${ftp_base}/fasta/homo_sapiens/dna_index/${fasta_file}"
+  readonly remote_fasta="${ftp_base}/fasta/${species}/dna_index/${fasta_file}"
   echo "Downloading ${remote_fasta} and its index files ..."
   curl -O "${remote_fasta}"
   curl -O "${remote_fasta}.fai"
