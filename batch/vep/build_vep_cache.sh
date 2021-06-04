@@ -35,7 +35,7 @@ set -euo pipefail
 
 readonly release="${ENSEMBL_RELEASE:-104}"
 readonly species="${VEP_SPECIES:-homo_sapiens}" # or "${VEP_SPECIES:-mus_musculus}"
-readonly assembly="${GENOME_ASSEMBLY:-GRCh38}" # or "${GENOME_ASSEMBLY:-GRCh37}" for homo_sapiens or "${GENOME_ASSEMBLY:-GRCm38}" for mus_musculus
+readonly assembly="${GENOME_ASSEMBLY:-GRCh38}" # or "${GENOME_ASSEMBLY:-GRCh37}" for homo_sapiens or "${GENOME_ASSEMBLY:-GRCm39}" for mus_musculus
 readonly work_dir="vep_cache"
 
 mkdir -p "${work_dir}"
