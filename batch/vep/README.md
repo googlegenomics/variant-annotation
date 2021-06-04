@@ -25,6 +25,11 @@ Inside this directory, run:
 
 `docker build . -t [IMAGE_TAG]`
 
+If you will be pushing the image to the
+[Container Registry](https://cloud.google.com/container-registry/) of
+`my-project` on Google Cloud, replace `[IMAGE_TAG]` with
+`gcr.io/my-project/vep:104`
+
 This will download the source from
 [VEP GitHub repo](https://github.com/Ensembl/ensembl-vep) and build VEP from
 that source. By default, it uses version 104 of VEP. This can be changed by
@@ -47,7 +52,7 @@ Choose a local directory with enough space (e.g., ~20GB for homo_sapiens) to
 download and integrate different pieces of the VEP database or cache files.
 Then from within that directory run the
 [`build_vep_cache.sh`](build_vep_cache.sh) script. By default this script
-creates the database for human (homo_sapiens), referenec sequence `GRCh38`,
+creates the database for human (homo_sapiens), reference sequence `GRCh38`,
 and release 104 of VEP. These values can be overwritten by the following
 environment variables (note you should use the same VEP release
 that you used for creating VEP docker image above):
@@ -59,24 +64,63 @@ that you used for creating VEP docker image above):
 ## How to run VEP on GCP
 
 There is the helper script [`run_vep.sh`](run_vep.sh) that is added to the VEP
-docker image and can be used to run VEP. One way of running it on
-Google Cloud Platform (GCP) is through the [Pipelines API](
-https://cloud.google.com/genomics/v1alpha2/pipelines-api-command-line). For a
-sample `yaml` job description check
-[`sample_pipeline.yaml`](sample_pipeline.yaml).
-Here is a sample `gcloud` command that uses that file:
+docker image and can be used to run VEP. It is recommended to use a tool such
+as [dsub](https://github.com/DataBiosphere/dsub)to run the script on Google
+Cloud Platform (GCP). Dsub will handle things such as file localization and
+copying logs, while running the container using [Cloud Life Sciences API](
+https://cloud.google.com/life-sciences/docs).
+
+Follow the instructions to [install dsub](https://github.com/DataBiosphere/dsub)
+
+Provide user credentials for `dsub` to use:
+
+```gcloud auth application-default login```
+
+Run `dsub` using the command below, replacing the variables for your project
+and bucket.
 
 ```
-gcloud alpha genomics pipelines run \
-  --project my-project \
-  --pipeline-file sample_pipeline.yaml \
-  --logging gs://my_bucket/logs \
-  --inputs VCF_INFO_FILED=CSQ_RERUN
+PROJECT_NAME=my_project
+BUCKET_NAME=my_bucket
+
+REGION=us-central1
+
+IMAGE=gcr.io/cloud-lifesciences/vep:104
+VEP_CACHE=gs://cloud-lifesciences/vep/vep_cache_homo_sapiens_GRCh38_104.tar.gz
+
+LOGGING=gs://${BUCKET_NAME}/logs
+INPUT_FILE=gs://${BUCKET_NAME}/input.vcf
+OUTPUT_FILE=gs://${BUCKET_NAME}/output.vcf
+
+
+dsub \
+  --provider google-cls-v2 \
+  --project ${PROJECT_NAME} \
+  --regions ${REGION} \
+  --machine-type n1-standard-16 \
+  --disk-size 100 \
+  --logging ${LOGGING} \
+  --input INPUT_FILE=${INPUT_FILE} \
+  --input VEP_CACHE=${VEP_CACHE} \
+  --output OUTPUT_FILE=${OUTPUT_FILE} \
+  --env VCF_INFO_FILED=CSQ_VT \
+  --env NUM_FORKS=12 \
+  --image ${IMAGE}
+  --command 'run_vep.sh ${INPUT_FILE} ${OUTPUT_FILE}' \
+  --wait
 ```
 
-Note the `vep_cache_homo_sapiens_GRCh38_104.tar.gz` file that is referenced in
-the sample `yaml` file, is the output file that you get from the above database
-creation step.
+### Notes
+
+The `VEP_CACHE` file is the file created
+by the above database creation step. Google Cloud provides a some versions of
+the cache files in a [publicly accessible Cloud Storage bucket](http://console.cloud.google.com/storage/browser/cloud-lifesciences/vep), but
+you can replace this with your own version or a different reference or species.
+
+Google Cloud also provides some versions of premade docker images in
+`gcr.io/cloud-lifesciences/vep`. You can check the
+[available versions](https://gcr.io/cloud-lifesciences/vep) and replace the tag
+or point dsub to use your own image.
 
 The [`run_vep.sh`](run_vep.sh) script relies on several environment variables
 that can be set to change the default behaviour. In the above example

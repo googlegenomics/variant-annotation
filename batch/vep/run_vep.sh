@@ -45,14 +45,14 @@ readonly other_vep_opts="${OTHER_VEP_OPTS:---everything \
 readonly annotation_field_name="${VCF_INFO_FILED:-CSQ}"
 
 if [[ ! -r "${VEP_CACHE:?VEP_CACHE is not set!}" ]]; then
-  echo "ERRPR: Cannot read ${VEP_CACHE}"
+  echo "ERROR: Cannot read ${VEP_CACHE}"
   exit 1
 fi
 
 # Check that the input file is readable.
 readonly input_file=${1}
 if [[ ! -r "${input_file}" ]]; then
-  echo "ERRPR: Cannot read ${input_file}"
+  echo "ERROR: Cannot read ${input_file}"
   exit 1
 fi
 
@@ -84,10 +84,10 @@ else
 fi
 popd
 
-readonly vep_command="./vep -i ${input_file} -o ${output_file} \
-  --dir ${vep_cache_dir} --offline --species ${species} --assembly ${assembly} \
-  --vcf --allele_number --vcf_info_field ${annotation_field_name} ${fork_opt} \
-  ${other_vep_opts}"
+readonly vep_command="/opt/variant_effect_predictor/vep -i ${input_file} \
+  -o ${output_file} --dir ${vep_cache_dir} --offline --species ${species} \
+  --assembly ${assembly} --vcf --allele_number \
+  --vcf_info_field ${annotation_field_name} ${fork_opt} ${other_vep_opts}"
 echo "VEP command is: ${vep_command}"
 
 echo "Running vep started at $(date)"
